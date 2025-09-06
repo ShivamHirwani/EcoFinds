@@ -3,6 +3,17 @@ const prisma = new PrismaClient();
 
 // CRUD
 
+// Read all products
+async function getAllProducts(req, res) {
+  try {
+    const products = await prisma.product.findMany();
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+
 async function createProduct(req, res) {
   const { title, description, category, price, image, userId } = req.body;
   try {
@@ -57,7 +68,7 @@ async function searchProducts(req, res) {
   res.json(products);
 }
 
-async function filterProducts(req, res) {
+async function filterByCategory(req, res) {
   const { category } = req.query;
   if (!category) return res.status(400).json({ error: "Category required" });
   const products = await prisma.product.findMany({ where: { category } });
@@ -66,9 +77,10 @@ async function filterProducts(req, res) {
 
 module.exports = {
   createProduct,
+  getAllProducts,
   getProductById,
   updateProduct,
   deleteProduct,
   searchProducts,
-  filterProducts,
+  filterByCategory,
 };
