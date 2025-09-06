@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
-  email     String    @unique
+  email     String     @unique
   password  String
-  createdAt DateTime  @default(now())
+  createdAt DateTime   @default(now())
   products  Product[] // relation to products
+  cartitem  CartItem[] // relation to cartitem
 }
 
 model Product {
@@ -22,10 +23,22 @@ model Product {
   description String
   category    String
   price       Float
-  image       String   // placeholder image URL
+  image       String // placeholder image URL
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user        User     @relation(fields: [userId], references: [id])
-  userId      Int
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  cartitem CartItem[]
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int      @default(1)
+  addedAt   DateTime @default(now())
 }

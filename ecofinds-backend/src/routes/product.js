@@ -1,18 +1,18 @@
-
 const express = require("express");
 const router = express.Router();
 const {
-  createProduct,
   getAllProducts,
   getProductById,
-  updateProduct,
-  deleteProduct,
+  searchProducts,
+  filterProducts,
 } = require("../controllers/productController");
 
-router.post("/", createProduct);
+// Search & filter routes first
+router.get("/search", searchProducts);       // ?q=keyword
+router.get("/filter", filterProducts);       // ?category=Electronics
+
+// CRUD routes
 router.get("/", getAllProducts);
-router.get("/:id", getProductById);
-router.put("/:id", updateProduct);
-router.delete("/:id", deleteProduct);
+router.get("/:id", getProductById);          // dynamic route LAST
 
 module.exports = router;
