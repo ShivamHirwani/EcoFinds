@@ -1,42 +1,34 @@
-
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-// Add to cart
 async function addToCart(req, res) {
   const { userId, productId, quantity } = req.body;
   try {
-    const cartItem = await prisma.cartItem.create({
-      data: { userId, productId, quantity: quantity || 1 },
+    const item = await prisma.cartItem.create({
+      data: { userId, productId, quantity },
     });
-    res.status(201).json(cartItem);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.json(item);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 }
 
-// View cart for a user
 async function getCart(req, res) {
   const { userId } = req.params;
-  try {
-    const cart = await prisma.cartItem.findMany({
-      where: { userId: parseInt(userId) },
-      include: { product: true },
-    });
-    res.json(cart);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  const items = await prisma.cartItem.findMany({
+    where: { userId: parseInt(userId) },
+    include: { product: true },
+  });
+  res.json(items);
 }
 
-// Remove item from cart
 async function removeFromCart(req, res) {
-  const { id } = req.params; // cart item id
+  const { id } = req.params;
   try {
     await prisma.cartItem.delete({ where: { id: parseInt(id) } });
-    res.json({ message: "Item removed from cart" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.json({ message: "Removed from cart" });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 }
 
