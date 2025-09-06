@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 const {
@@ -6,19 +7,12 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
-  searchProducts,
-  filterProductsByCategory,
 } = require("../controllers/productController");
 
-// CRUD routes
 router.post("/", createProduct);
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);
 router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
-
-// Search & filter
-router.get("/search", searchProducts);
-router.get("/category/:category", filterProductsByCategory);
 
 module.exports = router;
